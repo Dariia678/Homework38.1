@@ -18,6 +18,9 @@ public class ShoppingCartApplication {
     }
 
     public void run() {
+        // Создаем один экземпляр корзины в рамках сессии
+        Cart cart = context.getBean(Cart.class);
+
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("Options: 1 - View Products, 2 - Add to Cart, 3 - Remove from Cart, 4 - Show Cart, 0 - Exit");
@@ -25,7 +28,6 @@ public class ShoppingCartApplication {
 
             if (choice == 0) break;
 
-            Cart cart = context.getBean(Cart.class); // каждый раз создается новый экземпляр корзины
             switch (choice) {
                 case 1 -> productRepository.getAllProducts().forEach(System.out::println);
                 case 2 -> {
@@ -45,7 +47,10 @@ public class ShoppingCartApplication {
                     cart.removeProductById(idToRemove);
                     System.out.println("Removed product with ID: " + idToRemove);
                 }
-                case 4 -> cart.displayCart();
+                case 4 -> {
+                    System.out.println("Cart contains:");
+                    cart.displayCart();
+                }
                 default -> System.out.println("Invalid option.");
             }
         }
